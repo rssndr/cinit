@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Cinit - A simple script to initialise a new C project with templates
+# Usage: cinit [options]
+# Stores templates in ~/.config/cinit/ and copies them to the current directory
+
+# Config file location
+CONFIG_FILE=~/.config/cinit/cinit.conf
+
+# Default template directory (where files are copied from)
+TEMPLATE_DIR=~/.config/cinit/default
+
+# Load configuration
+. "$CONFIG_FILE"
+
+# Set DEFAULT_YEAR dynamically
+DEFAULT_YEAR=$(date +%Y)
+
+# Debug
+echo "Loaded DEFAULT_LICENSE: $DEFAULT_LICENSE"
+echo "Loaded OWNER_NAME: $OWNER_NAME"
+echo "Loaded DEFAULT_YEAR: $DEFAULT_YEAR"
+echo "Loaded INCLUDE_FILES: $INCLUDE_FILES"
+
