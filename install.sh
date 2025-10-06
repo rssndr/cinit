@@ -1,29 +1,24 @@
 #!/bin/bash
 
-# Directory where templates are stored
-TEMPLATE_DIR=~/bin/
+# Create the target directories
+mkdir -p ~/.config/cinit
 
-# Check if template files exist
-for file in Makefile .gitignore LICENSE README.md main.c; do
-    if [ ! -f "$TEMPLATE_DIR/$file" ]; then
-        echo "Error: $file not found in $TEMPLATE_DIR"
-        exit 1
-    fi
-done
+cp -r .config/cinit/cinit.conf ~/.config/cinit/
+cp -r .config/cinit/default ~/.config/cinit/
+cp -r .config/cinit/templates ~/.config/cinit/
 
-# Copy template files
-cp "$TEMPLATE_DIR/Makefile" ./Makefile
-cp "$TEMPLATE_DIR/.gitignore" ./.gitignore
-cp "$TEMPLATE_DIR/main.c" ./main.c
-cp "$TEMPLATE_DIR/LICENSE" ./LICENSE
-cp "$TEMPLATE_DIR/README.md" ./README.md
+# TODO:
+# Create and copy the cinit script
+echo "#!/bin/bash" > cinit
+echo "echo 'Cinit script placeholder - to be implemented'" >> cinit
+chmod +x cinit
+sudo cp cinit /usr/local/bin/cinit
+sudo chmod +x /usr/local/bin/cinit
 
-# Notify user
-echo "C project initialized in $(pwd) with:"
-echo "- Makefile"
-echo "- .gitignore"
-echo "- main.c"
-echo "- LICENSE"
-echo "- README.md"
-echo "Run 'make' to build and 'make run' to execute."
+# Cleanup
+rm cinit
+
+# Notify completition
+echo "Installation complete. You can now run 'cinit' from any directory."
+echo "Templates and config are stored in ~/.config/cinit/."
 
