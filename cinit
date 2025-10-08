@@ -16,6 +16,19 @@ TEMPLATE_DIR=~/.config/cinit/default
 # Set DEFAULT_YEAR dynamically
 DEFAULT_YEAR=$(date +%Y)
 
+# Define default license file
+LICENSE_FILE=~/.config/cinit/templates/licenses/LICENSE-$DEFAULT_LICENSE
+
+# Copy files from default template directory
+for file in $INCLUDE_FILES; do
+    if [ "$file" = "LICENSE" ]; then
+        # Copy license file and replace placeholders
+        sed "s/{OWNER_NAME}/$OWNER_NAME/g; s/{DEFAULT_YEAR}/$DEFAULT_YEAR/g" "$LICENSE_FILE" > "./LICENSE"
+    else
+        cp "$TEMPLATE_DIR/$file" "./$file"
+    fi
+done
+
 # Debug
 echo "Loaded DEFAULT_LICENSE: $DEFAULT_LICENSE"
 echo "Loaded OWNER_NAME: $OWNER_NAME"
