@@ -3,6 +3,8 @@
 # Cinit - A simple script to initialise a new C project with templates
 # Usage: cinit [options]
 # Stores templates in ~/.config/cinit/ and copies them to the current directory
+# DEFAULT_YEAR is computed dynamically each run
+# OWNER_NAME, DEFAULT_LICENSE, INCLUDE_FILES, and DEFAULT_YEAR can be overridden with repo-specific options
 
 # Config file location
 CONFIG_FILE=~/.config/cinit/cinit.conf
@@ -16,6 +18,31 @@ TEMPLATE_DIR=~/.config/cinit/default
 # Set DEFAULT_YEAR dynamically
 DEFAULT_YEAR=$(date +%Y)
 
+# Parse command-line arguments
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --owner=*)
+            OWNER_NAME="${1#--owner=}"
+            shift
+            ;;
+        --license=*)
+            DEFAULT_LICENSE="${1#--license=}"
+            shift
+            ;;
+        --files=*)
+            INCLUDE_FILES="${1#--files=}"
+            shift
+            ;;
+        --year=*)
+            DEFAULT_YEAR="${1#--year=}"
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
 # Define default license file
 LICENSE_FILE=~/.config/cinit/templates/licenses/LICENSE-$DEFAULT_LICENSE
 
@@ -24,14 +51,13 @@ for file in $INCLUDE_FILES; do
     if [ "$file" = "LICENSE" ]; then
         # Copy license file and replace placeholders
         sed "s/{OWNER_NAME}/$OWNER_NAME/g; s/{DEFAULT_YEAR}/$DEFAULT_YEAR/g" "$LICENSE_FILE" > "./LICENSE"
+        echo "Loaded LICENSE"
     else
         cp "$TEMPLATE_DIR/$file" "./$file"
+        echo "Loaded $file"
     fi
 done
 
 # Debug
-echo "Loaded DEFAULT_LICENSE: $DEFAULT_LICENSE"
-echo "Loaded OWNER_NAME: $OWNER_NAME"
-echo "Loaded DEFAULT_YEAR: $DEFAULT_YEAR"
-echo "Loaded INCLUDE_FILES: $INCLUDE_FILES"
+echo "Initialisation completed"
 
