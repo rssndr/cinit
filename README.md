@@ -6,7 +6,7 @@ Cinit is a simple bash script designed to initialize new C projects with a set o
 
 1. Clone the repository or download the files to your local machine:
    ```bash
-   git clone https://github.com/yourusername/cinit.git
+   git clone https://github.com/rssndr/cinit.git
    cd cinit
    ```
 2. Run the installation script with sudo privileges:
