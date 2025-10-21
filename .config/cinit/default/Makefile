@@ -26,7 +26,7 @@ build:
 	mkdir -p build
 
 # Linking the target executable
-build/$(TARGET): build | build
+build/$(TARGET): $(OBJS)
 	$(CC) $(OBJS) -o build/$(TARGET) $(LIBS)
 
 # Compiling source files
