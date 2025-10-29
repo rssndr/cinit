@@ -35,31 +35,29 @@ The resulting directory will contain:
 - `LICENSE`: A customized MIT license with your name and the current year.
 
 You can customize the initialization with the following repo-specific options:
-- `--owner=<name>`: Sets the owner name for this repo (e.g., `--owner="Collaborator Name"`).
-- `--license=<type>`: Specifies the license (e.g., `--license=GPL-2.0`).
-- `--files=<list>`: Defines which files to include (e.g., `--files="main.c LICENSE"`).
-- `--year=<year>`: Sets a specific copyright year (e.g., `--year=2024`).
+- `--owner=<name>`              Sets the owner name for this repo
+- `--license=<type>`            Specifies the license
+- `--files=<list>`              Defines which files to include
+- `--year=<year>`               Sets a specific copyright year
 
-Example:
-```bash
-cinit --owner="Collaborator Name" --license=GPL-2.0 --files="main.c LICENSE" --year=2024
-```
+- `--default-owner=<name>`      Permanently change default owner.
+- `--default-license=<type>`    Permanently change default license.
+- `--default-files=<list>`      Permanently change default files list.
+
+Examples:
+- `cinit`
+- `cinit --owner="John Doe" --license=MIT`
+- `cinit --default-files="main.c LICENSE"`
 
 The resulting directory will contain the specified files, with a customized LICENSE reflecting the provided options.
 
 ## Current Features
 - **Dynamic License Generation**: The LICENSE file is created each time from a template, replacing `{OWNER_NAME}` with your name (set during installation) and `{DEFAULT_YEAR}` with the current year.
-- **Configurable Setup**: Uses `~/.config/cinit/cinit.conf` to store default settings (e.g., license type, included files).
+- **Configurable Setup**: Uses `~/.config/cinit/cinit.conf` to store default settings (e.g., license type, included files). Defaults or project-specific settings can be modified with command-line arguments.
 - **Default Templates**: Provides a pre-defined set of files for new projects.
-
-## TODO:
-- Add command-line options changing default settings.
-- Add helper options, like `--help` for quick instructions for usage and command-line options, and `--defaults`, to show default user settings.
-- Enhance documentation
 
 ## Contributing
 Feel free to fork this repository, make improvements, and submit pull requests. Suggestions for new features or bug reports are welcome!
 
 ## License
 This project itself is licensed under the MIT License. See the included LICENSE file for details.
-

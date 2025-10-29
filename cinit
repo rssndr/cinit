@@ -6,58 +6,87 @@
 # DEFAULT_YEAR is computed dynamically each run
 # OWNER_NAME, DEFAULT_LICENSE, INCLUDE_FILES, and DEFAULT_YEAR can be overridden with repo-specific options
 
-# Config file location
+# Load config
 CONFIG_FILE=~/.config/cinit/cinit.conf
-
-# Default template directory (where files are copied from)
 TEMPLATE_DIR=~/.config/cinit/default
-
-# Load configuration
 . "$CONFIG_FILE"
 
-# Set DEFAULT_YEAR dynamically
+# Dynamic year
 DEFAULT_YEAR=$(date +%Y)
 
-# Parse command-line arguments
+# Parse CLI args
 while [ $# -gt 0 ]; do
     case "$1" in
-        --owner=*)
-            OWNER_NAME="${1#--owner=}"
-            shift
+        --owner=*)  OWNER_NAME="${1#--owner=}"; shift ;;
+        --license=*) DEFAULT_LICENSE="${1#--license=}"; shift ;;
+        --files=*) INCLUDE_FILES="${1#--files=}"; shift ;;
+        --year=*)   DEFAULT_YEAR="${1#--year=}"; shift ;;
+
+        --default-owner=*)
+            NEW_OWNER="${1#--default-owner=}"
+            sed -i "s/^OWNER_NAME=.*/OWNER_NAME=\"$NEW_OWNER\"/" "$CONFIG_FILE"
+            echo "Default owner updated: $NEW_OWNER"
+            exit 0
             ;;
-        --license=*)
-            DEFAULT_LICENSE="${1#--license=}"
-            shift
+
+        --default-license=*)
+            NEW_LICENSE="${1#--default-license=}"
+            sed -i "s/^DEFAULT_LICENSE=.*/DEFAULT_LICENSE=\"$NEW_LICENSE\"/" "$CONFIG_FILE"
+            echo "Default license updated: $NEW_LICENSE"
+            exit 0
             ;;
-        --files=*)
-            INCLUDE_FILES="${1#--files=}"
-            shift
+
+        --default-files=*)
+            NEW_FILES="${1#--default-files=}"
+            ESCAPED=$(printf '%s\n' "$NEW_FILES" | sed 's/[&\\/]/\\&/g; s/"/\\"/g')
+            sed -i "s/^INCLUDE_FILES=.*/INCLUDE_FILES=\"$ESCAPED\"/" "$CONFIG_FILE"
+            echo "Default files updated: $NEW_FILES"
+            exit 0
             ;;
-        --year=*)
-            DEFAULT_YEAR="${1#--year=}"
-            shift
+
+        --help|-h)
+            cat << 'EOF'
+Usage: cinit [options]
+
+Options:
+--owner=<name>              Sets the owner name for this repo
+--license=<type>            Specifies the license
+--files=<list>              Defines which files to include
+--year=<year>               Sets a specific copyright year
+
+--default-owner=<name>      Permanently change default owner.
+--default-license=<type>    Permanently change default license.
+--default-files=<list>      Permanently change default files list.
+
+Examples:
+cinit
+cinit --owner="John Doe" --license=MIT
+cinit --default-files="main.c LICENSE"
+EOF
+            exit 0
             ;;
-        *)
-            shift
-            ;;
+
+        *) echo "Unknown option: $1"; shift ;;
     esac
 done
 
-# Define license file
+# License file
 LICENSE_FILE=~/.config/cinit/templates/licenses/LICENSE-$DEFAULT_LICENSE
 
-# Copy files from default template directory
+# Copy files
 for file in $INCLUDE_FILES; do
     if [ "$file" = "LICENSE" ]; then
-        # Copy license file and replace placeholders
-        sed "s/{OWNER_NAME}/$OWNER_NAME/g; s/{DEFAULT_YEAR}/$DEFAULT_YEAR/g" "$LICENSE_FILE" > "./LICENSE"
+        sed "s/{OWNER_NAME}/$OWNER_NAME/g; s/{DEFAULT_YEAR}/$DEFAULT_YEAR/g" \
+            "$LICENSE_FILE" > "./LICENSE"
     else
+        mkdir -p "$(dirname "./$file")"
         cp "$TEMPLATE_DIR/$file" "./$file"
     fi
-
     echo "Loaded $file"
 done
 
-# Debug
-echo "Initialisation completed"
+echo
+echo "Project initialized!"
+echo "→ Build: make"
+echo "→ Run: make run"
 

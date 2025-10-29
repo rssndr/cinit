@@ -39,5 +39,5 @@ clean:
 
 # Run the program
 run: build/$(TARGET)
-	./build/$(TARGET)
+	@./build/$(TARGET)
 
